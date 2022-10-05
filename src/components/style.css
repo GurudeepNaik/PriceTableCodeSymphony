@@ -1,0 +1,210 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.header {
+  width: 100vw;
+  margin: auto;
+  height: 100vh;
+  background: #25316d;
+}
+h1.h1header {
+  font-size: 60px;
+  color: #fef5ac;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-style: normal;
+  font-family: serif;
+  font-weight: 900;
+}
+.linkContainer {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 75px;
+}
+a.header__link {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 25px;
+  font-size: 22px;
+  background: #5f6f94;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.1s;
+}
+a.header__link:hover {
+  -webkit-box-shadow: 0 0 10px #fff;
+  box-shadow: 0 0 10px #fff;
+}
+/* ///////////////////////////////////////////////////// */
+.basePriceContainer {
+  width: 100vw;
+  height: 100%;
+  background: #a66cff;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+form.form-basePrice {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px 0;
+  font-size: 25px;
+  color: #ffffff;
+  font-weight: 600;
+  font-style: normal;
+  font-family: math;
+}
+h1.basePrice {
+  color: aliceblue;
+}
+label {
+  align-self: center;
+  font-size: 25px;
+  padding-right: 20px;
+}
+input[type="number"],
+input[type="datetime-local"] {
+  width: 230px;
+  height: 45px;
+  font-size: 25px;
+  background: #9c9efe;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  font-style: normal;
+  font-family: revert;
+}
+input[type="number"]:focus-visible,
+input[type="datetime-local"]:focus-visible {
+  outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.submitbtn {
+  background-color: initial;
+  background-image: linear-gradient(-180deg, #ffe9ae, #ffdba4);
+  border-radius: 6px;
+  box-shadow: rgb(0 0 0 / 10%) 0 2px 4px;
+  color: #002b5b;
+  cursor: pointer;
+  display: inline-block;
+  outline: 0;
+  overflow: hidden;
+  font-size: 20px;
+  padding: 0 20px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  width: 110px;
+  z-index: 9;
+  align-self: center;
+  height: 40px;
+  border: 0;
+  transition: box-shadow 0.2s;
+  font-weight: 600;
+  font-style: normal;
+  font-family: system-ui;
+}
+
+.submitbtn:hover {
+  box-shadow: rgba(253, 76, 0, 0.5) 0 3px 8px;
+}
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgb(0 0 0 / 15%);
+}
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+  color: aliceblue;
+  text-align: center;
+}
+.styled-table tbody tr {
+  background-color: #4455a8;
+}
+
+.btn {
+  /* background-color: rgba(51, 51, 51, 0.05); */
+  border-radius: 8px;
+  border-width: 0;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: center;
+  transition: all 200ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.dngr {
+  background-color: brown;
+}
+.updt {
+  background-color: #009879;
+}
+
+.slot {
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 10%) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+  padding: 10px 25px;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin: auto;
+  display: block;
+  width: 150px;
+  text-decoration: none;
+  margin-top: 50px;
+}
+.slot:hover {
+  box-shadow: rgba(0, 0, 0, 0.15) 0 3px 9px 0;
+  transform: translateY(-2px);
+}
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #4b7ab4;
+}
