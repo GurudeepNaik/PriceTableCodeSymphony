@@ -66,7 +66,7 @@ label {
   padding-right: 20px;
 }
 input[type="number"],
-input[type="datetime-local"] {
+input[type="datetime-local"] ,.sloteDate > input[type="date"] {
   width: 230px;
   height: 45px;
   font-size: 25px;
@@ -79,19 +79,18 @@ input[type="datetime-local"] {
   font-family: revert;
 }
 input[type="number"]:focus-visible,
-input[type="datetime-local"]:focus-visible {
+input[type="datetime-local"]:focus-visible,.sloteDate > input[type="date"]  {
   outline: none;
 }
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input::-webkit-inner-spin-button,.sloteDate > input[type="date"]  {
   -webkit-appearance: none;
   margin: 0;
 }
-.submitbtn {
+.submitbtn , .sloteDate > button{
   background-color: initial;
   background-image: linear-gradient(-180deg, #ffe9ae, #ffdba4);
   border-radius: 6px;
-  box-shadow: rgb(0 0 0 / 10%) 0 2px 4px;
   color: #002b5b;
   cursor: pointer;
   display: inline-block;
@@ -118,7 +117,7 @@ input::-webkit-inner-spin-button {
   font-family: system-ui;
 }
 
-.submitbtn:hover {
+.submitbtn:hover , .sloteDate > button:hover{
   box-shadow: rgba(253, 76, 0, 0.5) 0 3px 8px;
 }
 .styled-table {
@@ -207,4 +206,36 @@ input::-webkit-inner-spin-button {
 }
 .styled-table tbody tr:nth-of-type(even) {
   background-color: #4b7ab4;
+}
+th.loader {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+}
+.sloteDate > h2 {
+  font-size: 40px;
+  color: #fef5ac;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-style: normal;
+  font-family: serif;
+  font-weight: 900;
+}
+.sloteDate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+h2.loader2 {
+  font-size: 48px;
+  color: #f2f2f2;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-style: normal;
+  font-family: serif;
+  font-weight: 900;
 }
