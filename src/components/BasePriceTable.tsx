@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./style.css";
 import { Link } from "react-router-dom";
-import { getIsOverlap } from "../utils/getIsOverlap";
+import { getIsOverlapBasePrice } from "../utils/getIsOverlapBasePrice"
 
 const BasePriceTable = () => {
   const rows: {
@@ -38,7 +38,7 @@ const BasePriceTable = () => {
       try {
 
         let isBooked: boolean | undefined  = false;
-        isBooked = getIsOverlap(tableData, basePriceForm);
+        isBooked = getIsOverlapBasePrice(tableData, basePriceForm);
         
         if(isBooked === false) {
 
@@ -57,7 +57,7 @@ const BasePriceTable = () => {
       try {
 
         let isBooked: boolean | undefined = false;
-        isBooked = getIsOverlap(tableData, { ...basePriceForm, id: updateItemId });
+        isBooked = getIsOverlapBasePrice(tableData, { ...basePriceForm, id: updateItemId });
 
         if(isBooked === false) {
 

@@ -10,7 +10,7 @@ const getOverlap = (a:any, b:any) => {
 };
   
 
-const getIsOverlap = (tableData: any, payload: any) => {
+const getIsOverlapBasePrice = (tableData: any, payload: any) => {
     
     let isDefaultRowExist = false;
     let indexOfDefaultRow = -1;
@@ -63,4 +63,4 @@ const getIsOverlap = (tableData: any, payload: any) => {
 
 };
 
-export {getIsOverlap};
+export { getIsOverlapBasePrice };
