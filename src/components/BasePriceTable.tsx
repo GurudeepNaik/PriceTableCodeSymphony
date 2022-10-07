@@ -25,7 +25,7 @@ const BasePriceTable = () => {
   const [updateItemId, setUpdateItemId] = useState(-1);
 
   const getBasePriceTable = () => {
-    fetch(`${ baseUrl }/basePrice`)
+    fetch(`${baseUrl}/basePrice`)
       .then((res: any) => res.json())
       .then((res: any) => setTableData(res.basePrice))
       .catch((err: any) => console.log(err));
@@ -35,40 +35,30 @@ const BasePriceTable = () => {
     e.preventDefault();
 
     if (!isUpdateFlag) {
-
       try {
-
-        let isBooked: boolean | undefined  = false;
+        let isBooked: boolean | undefined = false;
         isBooked = getIsOverlap(tableData, basePriceForm);
-        
-        if(isBooked === false) {
 
-        await axios.post(`${ baseUrl }/basePrice`, basePriceForm);
-        setBasePriceForm({ amount: 0, fromTime: "", toTime: "" });
-        getBasePriceTable();
-
+        if (isBooked === false) {
+          await axios.post(`${baseUrl}/basePrice`, basePriceForm);
+          setBasePriceForm({ amount: 0, fromTime: "", toTime: "" });
+          getBasePriceTable();
         }
-        
+
       } catch (error) {
         console.log(error);
       }
-
     } else {
-      
       try {
-
         let isBooked: boolean | undefined = false;
         isBooked = getIsOverlap(tableData, { ...basePriceForm, id: updateItemId });
 
-        if(isBooked === false) {
-
-          await axios.put(`${ baseUrl }/editBasePrice/${ updateItemId }`, basePriceForm);
+        if (isBooked === false) {
+          await axios.put(`${baseUrl}/editBasePrice/${updateItemId}`, basePriceForm );
           getBasePriceTable();
           setBasePriceForm({ amount: 0, fromTime: "", toTime: "" });
           setIsUpdateFlag(false);
-
         }
-       
       } catch (error) {
         console.log(error);
       }
@@ -78,36 +68,39 @@ const BasePriceTable = () => {
   useEffect(() => {
     getBasePriceTable();
   }, []);
-  
-  
+
   const handleUpdate = async (item: any) => {
 
-    if(item.fromTime && item.toTime) {
+    if (item.fromTime && item.toTime) {
 
-      setBasePriceForm((prev)=>({ ...prev, amount: item.amount,
+      setBasePriceForm((prev) => ({
+        ...prev,
+        amount: item.amount,
         fromTime: new Date(item.fromTime).toUTCString().split(" ")[4],
-        toTime: new Date(item.toTime).toUTCString().split(" ")[4] 
+        toTime: new Date(item.toTime).toUTCString().split(" ")[4],
       }));
 
     } else {
-
-      setBasePriceForm((prev)=>({ ...prev, amount: item.amount, fromTime: "", toTime: "" }));
+      setBasePriceForm((prev) => ({
+        ...prev,
+        amount: item.amount,
+        fromTime: "",
+        toTime: "",
+      }));
     }
 
     setIsUpdateFlag(true);
     setUpdateItemId(item.id);
+
   };
 
   const handleDelete = async (item: any) => {
-
     try {
-
-      await axios.delete(`${ baseUrl }/basePrice/${ item.id }`);
+      await axios.delete(`${baseUrl}/basePrice/${item.id}`);
       let array = tableData;
       array = array.filter((itemObj: any) => itemObj.id !== item.id);
       setTableData(array);
       setIsUpdateFlag(false);
-
     } catch (error) {
       console.log(error);
     }
@@ -120,31 +113,29 @@ const BasePriceTable = () => {
   return (
     <div className="basePriceContainer">
       <h1 className="h1header basePrice">Base Price</h1>
-      <form className="form-basePrice" onSubmit={ handleSubmit }>
+      <form className="form-basePrice" onSubmit={handleSubmit}>
         <label>Amount</label>
         <input
           type="number"
-          value={ basePriceForm.amount }
+          value={basePriceForm.amount}
           name="amount"
-          onChange={ (e) => handleChangeHandler(e) }
+          onChange={(e) => handleChangeHandler(e)}
         />
         <label>From Time</label>
         <input
           type="time"
           value={basePriceForm.fromTime}
           name="fromTime"
-          onChange={ (e) => handleChangeHandler(e) }
+          onChange={(e) => handleChangeHandler(e)}
         />
         <label>To Time</label>
         <input
           type="time"
           value={basePriceForm.toTime}
           name="toTime"
-          onChange={ (e) => handleChangeHandler(e) }
+          onChange={(e) => handleChangeHandler(e)}
         />
-        <button className="submitbtn" type="submit">
-          {isUpdateFlag ? "SAVE" : "SUBMIT"}
-        </button>
+        <button className="submitbtn" type="submit">{ isUpdateFlag ? "SAVE" : "SUBMIT" }</button>
       </form>
       <div>
         <table className="tbl styled-table">
@@ -160,46 +151,32 @@ const BasePriceTable = () => {
             </tr>
           </thead>
           <tbody>
-            { tableData.length > 0 &&
+            {tableData.length > 0 &&
               tableData.map((item: any) => {
                 return (
-                  <tr key={ item.id }>
-                    <td>{ item.id }</td>
-                    <td>{ item.amount }</td>
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.amount}</td>
                     <td>
-                      { item.fromTime &&
-                        new Date(item.fromTime).toUTCString().split(" ")[4] }
+                      {item.fromTime && new Date(item.fromTime).toUTCString().split(" ")[4]}
                     </td>
                     <td>
-                      { item.toTime &&
-                        new Date(item.toTime).toUTCString().split(" ")[4] }
+                      {item.toTime && new Date(item.toTime).toUTCString().split(" ")[4]}
                     </td>
-                    <th>{ new Date(item.create_at).toLocaleString() }</th>
-                    <th>{ new Date(item.update_at).toLocaleString() }</th>
+                    <th>{new Date(item.create_at).toLocaleString()}</th>
+                    <th>{new Date(item.update_at).toLocaleString()}</th>
                     <td>
-                      <button
-                        className="btn updt"
-                        onClick={ () => handleUpdate(item) }
-                      >
-                        UPDATE
-                      </button>
+                      <button className="btn updt" onClick={() => handleUpdate(item)}> UPDATE </button>
                       &nbsp; &nbsp; &nbsp;
-                      <button
-                        className="btn dngr"
-                        onClick={ () => handleDelete(item) }
-                      >
-                        DELETE
-                      </button>
+                      <button className="btn dngr" onClick={() => handleDelete(item)}> DELETE </button>
                     </td>
                   </tr>
                 );
-              }) }
+              })}
           </tbody>
         </table>
       </div>
-      <Link to="/slotPrice" className="slot">
-        Slot Price
-      </Link>
+      <Link to="/slotPrice" className="slot"> Slot Price </Link>
     </div>
   );
 };
