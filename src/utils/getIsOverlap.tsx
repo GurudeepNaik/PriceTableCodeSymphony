@@ -4,10 +4,25 @@ const getTimeInMilliSeconds = (a:any) => {
     return milliSeconds;
 };
 
-export const getOverlap = (a:any, b:any) => {
+const extractToFromTimes = (obj:any) => ({ toTime: new Date(obj.endTime).getTime(), fromTime: new Date(obj.startTime).getTime() });
+
+
+const getOverlap = (a:any, b:any) => {
 
     return Math.max(0, Math.min(a.toTime, b.toTime) - Math.max(a.fromTime, b.fromTime));
 };
+  
+
+const getIsMinuteZero = (obj:any) => {
+    const { fromTime, toTime } = obj;
+    
+    if(fromTime.split(":")[1] === "00" && toTime.split(":")[1] === "00") {
+        return true;
+    } else {
+        return false;
+    }
+
+}
   
 
 const getIsOverlap = (tableData: any, payload: any) => {
@@ -15,18 +30,16 @@ const getIsOverlap = (tableData: any, payload: any) => {
     let isDefaultRowExist = false;
     let indexOfDefaultRow = -1;
     const { fromTime, toTime, id } = payload;
-
-
+    const isMinuteZero = getIsMinuteZero({ fromTime, toTime });
+console.log(fromTime,"888",toTime,isMinuteZero);
     for (let i = 0; i < tableData.length; i++) {
         
         if (!tableData[i].fromTime && !tableData.toTime) {
           isDefaultRowExist = true;
           indexOfDefaultRow = i;
-
         }
     }
-  
-    if (fromTime && toTime && (getTimeInMilliSeconds(toTime) > getTimeInMilliSeconds(fromTime))) {
+    if (fromTime && toTime && isMinuteZero && (getTimeInMilliSeconds(toTime) > getTimeInMilliSeconds(fromTime))) {
   
         let currentSlot = { fromTime: getTimeInMilliSeconds(fromTime), toTime: getTimeInMilliSeconds(toTime) };
   
@@ -48,19 +61,18 @@ const getIsOverlap = (tableData: any, payload: any) => {
           
         }
         return false;
-
     } else if(fromTime === "" && toTime === "" && id) {
         return false;
-
     } else if(!isDefaultRowExist && fromTime === "" && toTime === "") {
         return false;
         
+    } else if(fromTime && toTime && !isMinuteZero) {
+        alert("Minutes should be zero");
     } else {
     
         alert("Time entered are incorrect or Default row already present ");
-
     }
-
 };
 
-export {getIsOverlap};
+export {getIsOverlap,getIsMinuteZero,getOverlap,extractToFromTimes};
+
