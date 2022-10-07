@@ -11,6 +11,17 @@ const getOverlap = (a:any, b:any) => {
 
     return Math.max(0, Math.min(a.toTime, b.toTime) - Math.max(a.fromTime, b.fromTime));
 };
+
+const getIsMinuteZero = (obj:any) => {
+
+    const { fromTime, toTime } = obj;
+    
+    if(fromTime.split(":")[1] === "00" && toTime.split(":")[1] === "00") {
+        return true;
+    } else {
+        return false;
+    }
+};
   
 
 const getIsMinuteZero = (obj:any) => {
@@ -31,7 +42,7 @@ const getIsOverlap = (tableData: any, payload: any) => {
     let indexOfDefaultRow = -1;
     const { fromTime, toTime, id } = payload;
     const isMinuteZero = getIsMinuteZero({ fromTime, toTime });
-console.log(fromTime,"888",toTime,isMinuteZero);
+
     for (let i = 0; i < tableData.length; i++) {
         
         if (!tableData[i].fromTime && !tableData.toTime) {
@@ -39,6 +50,7 @@ console.log(fromTime,"888",toTime,isMinuteZero);
           indexOfDefaultRow = i;
         }
     }
+
     if (fromTime && toTime && isMinuteZero && (getTimeInMilliSeconds(toTime) > getTimeInMilliSeconds(fromTime))) {
   
         let currentSlot = { fromTime: getTimeInMilliSeconds(fromTime), toTime: getTimeInMilliSeconds(toTime) };
@@ -67,7 +79,9 @@ console.log(fromTime,"888",toTime,isMinuteZero);
         return false;
         
     } else if(fromTime && toTime && !isMinuteZero) {
+
         alert("Minutes should be zero");
+
     } else {
     
         alert("Time entered are incorrect or Default row already present ");
@@ -75,4 +89,3 @@ console.log(fromTime,"888",toTime,isMinuteZero);
 };
 
 export {getIsOverlap,getIsMinuteZero,getOverlap,extractToFromTimes};
-
