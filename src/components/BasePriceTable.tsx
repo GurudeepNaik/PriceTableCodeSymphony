@@ -3,6 +3,7 @@ import axios from "axios";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { getIsOverlap } from "../utils/getIsOverlap";
+import { baseUrl } from "../constants/url";
 
 const BasePriceTable = () => {
   const rows: {
@@ -24,7 +25,7 @@ const BasePriceTable = () => {
   const [updateItemId, setUpdateItemId] = useState(-1);
 
   const getBasePriceTable = () => {
-    fetch("http://localhost:7000/slotsPrice?date=2022-08-09")
+    fetch(`${ baseUrl }/basePrice`)
       .then((res: any) => res.json())
       .then((res: any) => setTableData(res.basePrice))
       .catch((err: any) => console.log(err));
@@ -42,7 +43,7 @@ const BasePriceTable = () => {
         
         if(isBooked === false) {
 
-        await axios.post(`http://localhost:7000/basePrice`, basePriceForm);
+        await axios.post(`${ baseUrl }/basePrice`, basePriceForm);
         setBasePriceForm({ amount: 0, fromTime: "", toTime: "" });
         getBasePriceTable();
 
@@ -61,7 +62,7 @@ const BasePriceTable = () => {
 
         if(isBooked === false) {
 
-          await axios.put(`http://localhost:7000/editBasePrice/${updateItemId}`, basePriceForm);
+          await axios.put(`${ baseUrl }/editBasePrice/${ updateItemId }`, basePriceForm);
           getBasePriceTable();
           setBasePriceForm({ amount: 0, fromTime: "", toTime: "" });
           setIsUpdateFlag(false);
@@ -101,7 +102,7 @@ const BasePriceTable = () => {
 
     try {
 
-      await axios.delete(`http://localhost:7000/basePrice/${item.id}`);
+      await axios.delete(`${ baseUrl }/basePrice/${item.id}`);
       let array = tableData;
       array = array.filter((itemObj: any) => itemObj.id !== item.id);
       setTableData(array);
