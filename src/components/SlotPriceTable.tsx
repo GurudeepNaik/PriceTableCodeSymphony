@@ -3,11 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./style.css";
 import { Link } from "react-router-dom";
-import { getOverlap } from "../utils/getIsOverlap";
+import { getOverlap,getIsMinuteZero,extractToFromTimes } from "../utils/getIsOverlap";
 import moment from "moment";
 import { baseUrl } from "../constants/url";
-
-const extractToFromTimes = (obj:any) => ({ toTime: new Date(obj.endTime).getTime(), fromTime: new Date(obj.startTime).getTime() });
 
 const SlotPriceTable = () => {
 
@@ -62,27 +60,41 @@ const SlotPriceTable = () => {
       //For Posting Data
       if (!isUpdateFlag) {
         try {
-          await axios.post(`${baseUrl}/newSlotPrice`, {
-            ...postData,
-            startTime: new Date(postData.startTime).toISOString(),
-            endTime: new Date(postData.endTime).toISOString(),
-          });
+          const toTime=postData.startTime;
+          const fromTime=postData.endTime;
+          const isMinuteZero=getIsMinuteZero({fromTime,toTime});
+          if(isMinuteZero){
+            await axios.post(`${baseUrl}/newSlotPrice`, {
+              ...postData,
+              startTime: new Date(postData.startTime).toISOString(),
+              endTime: new Date(postData.endTime).toISOString(),
+            });
+            getSlotPriceTable();
+          }else{
+            window.alert("Please Add Time In Hours");
+          }
           setPostData(initialPostValue);
-          getSlotPriceTable();
         } catch (error) {
           console.log(error);
         }
       } else {
       //for Updating Data
         try {
+          const toTime=postData.startTime;
+          const fromTime=postData.endTime;
+          const isMinuteZero=getIsMinuteZero({fromTime,toTime});
+          if(isMinuteZero){
           await axios.put(`${baseUrl}/slotPrice/${postData.id}`, {
             amount: postData.amount,
             startTime: new Date(postData.startTime).toISOString(),
             endTime: new Date(postData.endTime).toISOString(),
           });
           getSlotPriceTable();
-          setPostData(initialPostValue);
-          setIsUpdateFlag(false);
+        }else{
+          window.alert("Please Add Time In Hours");
+        }
+        setIsUpdateFlag(false);
+        setPostData(initialPostValue);
         } catch (error) {
           console.log(error);
         }
