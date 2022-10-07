@@ -4,7 +4,10 @@ const getTimeInMilliSeconds = (a:any) => {
     return milliSeconds;
 };
 
-export const getOverlap = (a:any, b:any) => {
+const extractToFromTimes = (obj:any) => ({ toTime: new Date(obj.endTime).getTime(), fromTime: new Date(obj.startTime).getTime() });
+
+
+const getOverlap = (a:any, b:any) => {
 
     return Math.max(0, Math.min(a.toTime, b.toTime) - Math.max(a.fromTime, b.fromTime));
 };
@@ -21,19 +24,30 @@ const getIsMinuteZero = (obj:any) => {
 };
   
 
+const getIsMinuteZero = (obj:any) => {
+    const { fromTime, toTime } = obj;
+    
+    if(fromTime.split(":")[1] === "00" && toTime.split(":")[1] === "00") {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+  
+
 const getIsOverlap = (tableData: any, payload: any) => {
     
     let isDefaultRowExist = false;
     let indexOfDefaultRow = -1;
     const { fromTime, toTime, id } = payload;
     const isMinuteZero = getIsMinuteZero({ fromTime, toTime });
-    
+
     for (let i = 0; i < tableData.length; i++) {
         
         if (!tableData[i].fromTime && !tableData.toTime) {
           isDefaultRowExist = true;
           indexOfDefaultRow = i;
-
         }
     }
 
@@ -59,10 +73,8 @@ const getIsOverlap = (tableData: any, payload: any) => {
           
         }
         return false;
-
     } else if(fromTime === "" && toTime === "" && id) {
         return false;
-
     } else if(!isDefaultRowExist && fromTime === "" && toTime === "") {
         return false;
         
@@ -73,9 +85,7 @@ const getIsOverlap = (tableData: any, payload: any) => {
     } else {
     
         alert("Time entered are incorrect or Default row already present ");
-
     }
-
 };
 
-export { getIsOverlap };
+export {getIsOverlap,getIsMinuteZero,getOverlap,extractToFromTimes};
