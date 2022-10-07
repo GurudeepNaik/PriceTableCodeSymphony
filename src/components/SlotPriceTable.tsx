@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./style.css";
 import { Link } from "react-router-dom";
-import { getOverlap } from "../utils/getOverLap";
+import { getOverlap } from "../utils/getIsOverlap";
 import moment from "moment";
+import { baseUrl } from "../constants/url";
+
+const extractToFromTimes = (obj:any) => ({ toTime: new Date(obj.endTime).getTime(), fromTime: new Date(obj.startTime).getTime() });
 
 const SlotPriceTable = () => {
 
-  const basicUrl="http://localhost:7000";
-
+  //for getting Table data
   const rows: {
     id: number;
     amount: number;
@@ -17,6 +19,7 @@ const SlotPriceTable = () => {
     endTime: string;
   }[] = [];
 
+  //initial values for post Data
   const initialPostValue={ id: 0, amount: 0, startTime: "", endTime: "" }
 
   const [tableData, setTableData] = useState(rows);
@@ -25,8 +28,8 @@ const SlotPriceTable = () => {
   const [slotDate, setSlotDate] = useState("");
   const [slotDateFlag, setSlotDateFlag] = useState(false);
 
-  const getBasePriceTable = async () => {
-    fetch(`${basicUrl}/slotsPrice?date=${slotDate}`)
+  const getSlotPriceTable = async () => {
+    fetch(`${baseUrl}/slotsPrice?date=${slotDate}`)
       .then((res: any) => res.json())
       .then((res: any) => {
         let data = res.slotePrice.sort( (a: any, b: any) => +new Date(a.startTime) - +new Date(b.startTime) );
@@ -37,7 +40,7 @@ const SlotPriceTable = () => {
 
 
   useEffect(() => {
-    slotDateFlag && getBasePriceTable();
+    slotDateFlag && getSlotPriceTable();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slotDateFlag,slotDate]);
 
@@ -52,30 +55,32 @@ const SlotPriceTable = () => {
     let num = 0;
     tableData.map((data) => {
       if (data.id !== postData.id) {
-        return (num = num + getOverlap(postData, data));
+        return (num = num + getOverlap(extractToFromTimes(postData), extractToFromTimes(data)));
       }
     });
     if (num === 0) {
+      //For Posting Data
       if (!isUpdateFlag) {
         try {
-          await axios.post(`${basicUrl}/newSlotPrice`, {
+          await axios.post(`${baseUrl}/newSlotPrice`, {
             ...postData,
             startTime: new Date(postData.startTime).toISOString(),
             endTime: new Date(postData.endTime).toISOString(),
           });
           setPostData(initialPostValue);
-          getBasePriceTable();
+          getSlotPriceTable();
         } catch (error) {
           console.log(error);
         }
       } else {
+      //for Updating Data
         try {
-          await axios.put(`${basicUrl}/slotPrice/${postData.id}`, {
+          await axios.put(`${baseUrl}/slotPrice/${postData.id}`, {
             amount: postData.amount,
             startTime: new Date(postData.startTime).toISOString(),
             endTime: new Date(postData.endTime).toISOString(),
           });
-          getBasePriceTable();
+          getSlotPriceTable();
           setPostData(initialPostValue);
           setIsUpdateFlag(false);
         } catch (error) {
@@ -90,7 +95,7 @@ const SlotPriceTable = () => {
 
   const handleDelete = async (item: any) => {
     try {
-      await axios.delete(`${basicUrl}/slotPrice/${item.id}`);
+      await axios.delete(`${baseUrl}/slotPrice/${item.id}`);
       let array = tableData;
       array = array.filter((itemObj: any) => itemObj.id !== item.id);
       setTableData(array);
@@ -102,11 +107,18 @@ const SlotPriceTable = () => {
 
   const handleUpdate = (data: any) => {
     data.startTime= moment(data.startTime).format("YYYY-MM-DDTkk:mm")
-    data.endTime= moment(data.startTime).format("YYYY-MM-DDTkk:mm")
+    data.endTime= moment(data.endTime).format("YYYY-MM-DDTkk:mm")
     setPostData(data);
     setIsUpdateFlag(true);
   };
 
+  const handleSubmitDate=()=>{
+      if(slotDate===""){
+        window.alert("Please Add Date")
+      }else{
+        setSlotDateFlag(true)
+      }
+  }
 
   return (
     <div className="basePriceContainer">
@@ -114,86 +126,88 @@ const SlotPriceTable = () => {
       <div className="sloteDate">
         <h2>Slot Date:</h2>
         <input
-        type="date"
-        value={slotDate}
-        name="slotDate"
-        onChange={(e)=>setSlotDate(e.target.value)}
+          type="date"
+          value={ slotDate }
+          name="slotDate"
+          onChange={(e) => setSlotDate(e.target.value)}
         />
-        <button onClick={()=>setSlotDateFlag(true)}>Slots</button>
+        <button onClick={() =>handleSubmitDate()}>Slots</button>
       </div>
       {slotDateFlag ? (
         <>
-        <form className="form-slotPrice form-basePrice" onSubmit={handleSubmit}>
-        <div>
-          <label>START TIME</label>
-          <input
-            type="datetime-local"
-            value={postData.startTime}
-            name="startTime"
-            onChange={(e) => handleChangeHandler(e)}
-          />
-        </div>
-        <div>
-          <label>END TIME</label>
-          <input
-            type="datetime-local"
-            value={postData.endTime}
-            name="endTime"
-            onChange={(e) => handleChangeHandler(e)}
-          />
-        </div>
-        <div>
-          <label>Amount</label>
-          <input
-            type="number"
-            value={postData.amount}
-            name="amount"
-            onChange={(e) => handleChangeHandler(e)}
-          />
-        </div>
-        <div>
-          <button className="submitbtn" type="submit">{isUpdateFlag ? "SAVE" : "SUBMIT"}</button>
-        </div>
-      </form>
-      <div>
-        <table className="tbl styled-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>START TIME</th>
-              <th>END TIME</th>
-              <th>AMOUNT</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.length > 0 ? (
-              tableData.map((data, i) => {
-                return (
-                  <tr key={i}>
-                    <th>{i + 1}</th>
-                    <th>{new Date(data.startTime).toLocaleString()}</th>
-                    <th>{new Date(data.endTime).toLocaleString()}</th>
-                    <th>{data.amount}</th>
-                    <th>
-                      <button className="btn updt" onClick={() => handleUpdate(data)}>UPDATE</button>
-                      &nbsp; &nbsp; &nbsp;
-                      <button className="btn dngr" onClick={() => handleDelete(data)}>DELETE</button>
-                    </th>
+          <form className="form-slotPrice form-basePrice" onSubmit={ handleSubmit }>
+            <div>
+              <label>START TIME</label>
+              <input
+                type="datetime-local"
+                value={postData.startTime}
+                name="startTime"
+                onChange={(e) => handleChangeHandler(e)}
+              />
+            </div>
+            <div>
+              <label>END TIME</label>
+              <input
+                type="datetime-local"
+                value={postData.endTime}
+                name="endTime"
+                onChange={(e) => handleChangeHandler(e)}
+              />
+            </div>
+            <div>
+              <label>Amount</label>
+              <input
+                type="number"
+                value={postData.amount}
+                name="amount"
+                onChange={(e) => handleChangeHandler(e)}
+              />
+            </div>
+            <div>
+              <button className="submitbtn" type="submit">{isUpdateFlag ? "SAVE" : "SUBMIT"}</button>
+            </div>
+          </form>
+          <div>
+            <table className="tbl styled-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>START TIME</th>
+                  <th>END TIME</th>
+                  <th>AMOUNT</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.length > 0 ? (
+                  tableData.map((data, i) => {
+                    return (
+                      <tr key={i}>
+                        <th>{i + 1}</th>
+                        <th>{new Date(data.startTime).toLocaleString()}</th>
+                        <th>{new Date(data.endTime).toLocaleString()}</th>
+                        <th>{data.amount}</th>
+                        <th>
+                          <button className="btn updt" onClick={() => handleUpdate(data)}>UPDATE</button>
+                          &nbsp; &nbsp; &nbsp;
+                          <button className="btn dngr" onClick={() => handleDelete(data)}>DELETE</button>
+                        </th>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <th className="loader">No Slots Available On this Day</th>
                   </tr>
-                )
-              })
-            ) : (
-              <tr>
-                <th className="loader">No Slots Available On this Day</th>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                )}
+              </tbody>
+            </table>
+          </div>
         </>
-      ):(<h2 className="loader2">Please Search SLots By Date</h2>)}
-      
+      ) : (
+        <h2 className="loader2">Please Search SLots By Date</h2>
+      )}
+
       <Link to="/basePrice" className="slot">Base Price</Link>
     </div>
   );
