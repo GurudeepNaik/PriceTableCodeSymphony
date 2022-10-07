@@ -4,7 +4,7 @@ const getTimeInMilliSeconds = (a:any) => {
     return milliSeconds;
 };
 
-const getOverlap = (a:any, b:any) => {
+export const getOverlap = (a:any, b:any) => {
 
     return Math.max(0, Math.min(a.toTime, b.toTime) - Math.max(a.fromTime, b.fromTime));
 };
