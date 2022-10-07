@@ -102,7 +102,7 @@ const BasePriceTable = () => {
 
     try {
 
-      await axios.delete(`${ baseUrl }/basePrice/${item.id}`);
+      await axios.delete(`${ baseUrl }/basePrice/${ item.id }`);
       let array = tableData;
       array = array.filter((itemObj: any) => itemObj.id !== item.id);
       setTableData(array);
