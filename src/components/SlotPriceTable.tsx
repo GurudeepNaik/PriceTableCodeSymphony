@@ -233,7 +233,7 @@ const SlotPriceTable = () => {
           </div>
         </>
       ) : (
-        <h2 className="loader2">Please Search SLots By Date</h2>
+        <h2 className="loader2">Please Search Slots By Date</h2>
       )}
 
       <Link to="/basePrice" className="slot"> Base Price </Link>

@@ -36,7 +36,7 @@ const getIsOverlap = (tableData: any, payload: any) => {
     }
   }
 
-  if (fromTime && toTime && isMinuteZero && getTimeInMilliSeconds(toTime) > getTimeInMilliSeconds(fromTime) ) {
+  if (fromTime && toTime && isMinuteZero && getTimeInMilliSeconds(toTime) > getTimeInMilliSeconds(fromTime)) {
     let currentSlot = {fromTime: getTimeInMilliSeconds(fromTime), toTime: getTimeInMilliSeconds(toTime) };
 
     for (let i = 0; i < tableData.length; i++) {
